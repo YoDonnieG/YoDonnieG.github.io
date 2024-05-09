@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyDashboard</title>
+    <script src="pouchdb-8.0.1.min.js"></script>
+    <script src="webdb.js"></script>
+    <script src="task.js"></script>
+    <script src="journal.js"></script>
+    <script src="notebook.js"></script>
+    <script src="bookmark.js"></script>
+    <script src="events.js"></script>
+    <script src="quill.js"></script>
+    <script src="jspdf.umd.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="planner.css" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
+  </head>
+  <body onload="initDB();">
+    <h3 id="version">v1.0</h3>
+
+    <div class="container">
+
+      <!-- <div class="sideBar"> -->
+        <div class="sideIconBar">
+          <!-- https://fontawesome.com/v4/icons/ -->
+          <a class="active" href="#home" onclick="toggleActiveSideBar(this)"><i class="fa fa-home fa-3x"></i></a>
+          <a href="#tasks" onclick="toggleActiveSideBar(this)"><i class="fa fa-check-square-o fa-3x"></i></a>
+          <a href="#notes"><i class="fa fa-sticky-note-o fa-3x"></i></a>
+          <a href="#calendar" ><i class="fa fa-calendar fa-3x"></i></a>
+          <a href="#links"><i class="fa fa-external-link-square fa-3x"></i></a>
+          <a href="#config"><i class="fa fa-cog fa-3x"></i></a>
+          <a href="#refresh"><i class="fa fa-refresh fa-3x"></i></a>
+        </div>
+      <!-- </div> -->
+      
+      <img src="SpiralNotebook.jpg" id="notebook">
+      <div class="panelContainer">
+        <div class="panel" id="leftPanel">  
+        <!-- Left-hand panel of the screen -->
+
+          <div class="subPanel" id="entryPanel">
+            <div class="split-div">
+              <div class="left-aligned">
+                <div id="tab1">
+                  <button class="btn1 cnt" id="allTab">All</button>
+                  <button class="btn1 cnt" id="projectTab">Project</button>
+                  <button class="btn1 cnt" id="taskTab">Task</button>
+                  <button class="btn1 cnt" id="reminderTab">Reminder</button>
+                  <button class="btn1 cnt" id="featureTab">Feature</button>
+                  <button class="btn1" onclick="showTab2()">>></button>
+                </div>
+                <div id="tab2" style="display:none">
+                  <button class="btn1 cnt" id="completedTab">Complete</button>                  
+                  <button class="btn1 cnt" id="personalTab">Personal</button>
+                  <!-- <button class="btn1 cnt" id="relatedTab">Related</button>    -->
+                  <button class="btn1" onclick="showTab1()"><<</button>
+                </div>
+              </div>
+              <div class="right-aligned">
+                <button class="btn1" id="btnAddNewEntry" onclick="addNewEntry()">Add New</button>
+              </div>
+            </div>
+            <div id="tableContainer">
+              <table id="entryTable">
+                <!-- Your table headers here -->
+                <thead>
+                    <tr>
+                        <th class="col0">Type</th>
+                        <th class="col1">ID</th>
+                        <th class="col2">Name</th>
+                        <th class="col3">Date Closed</th>
+                        <th class="col4">Date Due</th>
+                        <th class="col5">Done</th>
+                        <!-- Add more headers as needed -->
+                    </tr>
+                </thead>
+                <!-- Your table body here -->
+                <tbody id="entryTableBody">
+                    <!-- Table rows will be dynamically populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>  <!-- End of EntryPanel -->
+          <div class="dateContainer">
+            <div class="column" id="date">Column 3</div>
+            <div class="column" id="time">Column 1</div>
+            <div class="column" id="day">Column 2</div>
+          </div>         
+        </div>
+
+        <div class="panel" id="rightPanel">
+          <!-- Right-hand panel of the screen -->
+          <div class="entryList" id="journalPanel"> 
+            <table>
+              <hr>
+                <td>
+                  <h2>Workday Journal</h2>
+                </td>
+                <td>
+                  <input type="text" id="journalID">
+                  <input type="text" id="journalRev" style="display:none">
+                </td>
+                <td style="text-align: right;">
+                  <h2 id="journalDateLabel"></h2>
+                </td>
+              </hr>
+              <tr>
+                <td colspan="3">
+                  <div id="journalEditor">
+                    <p id="journalArea"></p>
+                  </div>
+
+                  <!-- <textarea id="journalArea" name="journalArea" readonly="true" rows="10" placeholder="Journal entries will display here..."></textarea> -->
+                  <!-- <textarea id="journalLog" name="journalLog" readonly="true" rows="10" placeholder="Task logs will display here..."></textarea> -->
+                </td>
+              </tr>
+            </table>
+            <h2 id="txtSpecial">Reserved for Special Occasions</h2>
+          </div>  
+
+          <div class="entryList" id="notesPanel" style="display: none"> 
+
+            <div class="split-div" style="display: flex; padding:0px; align-items: baseline;">
+              <div class="left-aligned">
+                  <h2>Notebook</h2>
+              </div>
+              <div class="right-aligned" style="margin: 0px !important; display: flex; justify-content: flex-end; align-items: center;">
+                  <input type="text" id="noteBookID" >
+                  <input type="text" id="noteBookRev" style="display:none">
+              </div>
+            </div>
+
+            <div class="inputContainer" >
+              <select id="drpNotebookTopic">
+                <option value="" disabled selected>Select a Topic</option>
+              </select>
+            </div>
+
+            <div id="notebookEditor">
+              <p id="notebookArea"></p>
+            </div>
+
+            <div id="newNotebookContainer" class="bottomPanel">
+              <button id="accNewNotebook" class="accordion">Topic Maint</button>
+              <div id="newNotebookArea" class="accPanel">
+                <table> 
+                  <tr>
+                    <td>
+                      <label for="noteBookTopic">Topic:</label>
+                      <input type="text" id="noteBookTopic">
+                    </td>
+                    <td colspan="3">
+                      <Center>
+                        <button class="btn1" id="btnAddTopic" onclick="addNotebook()">Add Topic</button>
+                        <button class="btn1" id="btnRenameTopic" onclick="renameNotebook()" style="margin-left: 50px;">Rename Topic</button>
+                      </Center>
+                    </td>
+                  </tr>
+                </table>  
+              </div>  <!-- end of newNotebookArea div  -->
+            </div>  <!-- end of newNotebookContainer div  -->
+          </div> 
+
+          <div class="entryList" id="entryPanel2" style="display:none">
+            <div class="split-div" style="display: flex; padding:0px; align-items: baseline;">
+                <div class="left-aligned">
+                    <h2>Data Editor</h2>
+                </div>
+                <div class="right-aligned" style="margin: 0px !important; display: flex; justify-content: flex-end; align-items: center;">
+                    <label for="entryId" >ID:</label>
+                    <input type="text" id="entryId" >
+                    <input type="text" id="entryRev" style="display:none">
+                </div>
+            </div>
+            
+            <div class="inputContainer">
+              <input id="entryName" type="text" placeholder="Title" class="inputContainer newEntry">
+              <input id="chkComplete" type="checkbox" class="inputContainer checkboxOverlay">
+            </div>
+            <button id="accEntryDetails" class="accordion">Details</button>
+            <div id="entryDetails" class="accPanel">
+              <table> 
+                <tr>
+                  <td>
+                    <label for="entryType">Type:</label>
+                    <select id="entryType">
+                      <option value="Task" selected>Task</option>
+                      <option value="Project">Project</option>
+                      <option value="Feature">Feature</option>
+                      <option value="Reminder">Reminder</option>
+                      <option value="Personal">Personal</option>
+                    </select>
+                  </td>
+                  <td>
+                    <label for="entryStatus">Status:</label>
+                    <select id="entryStatus">
+                      <option value="Not Started" selected>Not Started</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="On Hold">On Hold</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </td>
+                  <td>
+                    <label for="entryPriority">Priority:</label>
+                      <select id="entryPriority">
+                        <option value="Urgent">Urgent</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low" selected>Low</option>
+                      </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="entrySubType">SubType:</label>
+                    <select id="entrySubType">
+                      <option value="None" selected>None</option>
+                      <option value="Fusion">Fusion</option>
+                      <option value="Impact">Impact</option>
+                      <option value="800 Series">800 Series</option>
+                      <option value="Fresh">Fresh</option>
+                      <option value="MTRS">MTRS</option>
+                    </select>
+                  </td>
+                  <td>
+                    <label for="entryCustomer">Customer:</label>
+                    <input type="text" id="entryCustomer" name="entryCustomer">
+                  </td>
+                  <td>         
+                    <label for="dateAdded">Added:</label>
+                    <input type="date" id="dateAdded" name="dateAdded">
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <label for="entryProject">Project / Task:</label>
+                    <select id="entryProject">
+                      <option value="None">None</option>
+                    </select>
+                  </td>
+                  <td>
+                    <label for="dateDue">Due:</label>
+                    <input type="date" id="dateDue" name="dateDue">
+                  </td>
+                </tr>
+                <tr>                  
+                  <td colspan="2">
+                    <label for="artifactPath">Repository Path:</label>
+                    <input type="text" id="artifactPath" name="artifactPath" readonly ondblclick="browseDirectory()">
+                  </td>
+                  <td>
+                    <label for="dateClosed">Closed:</label>
+                    <input type="date" id="dateClosed" name="dateClosed">
+                  </td>
+                </tr>
+                <tr id="ReminderRow1" class="ReminderRow" style="display: none">
+                  <td colspan="2"> 
+                    <label for="reminderTitle" placeholder="Enter reminder title">Reminder Task</label>
+                    <input type="text" id="reminderTitle" name="reminderTitle">
+                  </td>
+                  <td>
+                    <label for="reminderDate">Reminder Date</label>
+                    <input type="date" id="reminderDate" name="reminderDate">
+                  </td>
+                </tr>
+                <tr id="ReminderRow2" class="ReminderRow" style="display: none">
+                  <td colspan="3" style="text-align: center;">
+                    <button class="btn1" id="submitReminder">Add Reminder</button>
+                  </td>
+                </tr>
+              </table>
+            </div> 
+            <button id="accordion1" class="accordion">Sub-Tasks</button>
+            <div id="subTaskArea" class="accPanel">
+              <input type="text" class="newEntry" id="entrySubTask" placeholder="Add new sub-task...">
+              <ul id="subTaskList">
+                  <!-- Sub-tasks will be added dynamically here -->
+              </ul>
+            </div>
+
+            <button id="accordion2" class="accordion">Notes</button>
+            <div id="accordion2" class="accPanel">
+              <!-- <label for="notesArea">Notes</label> -->
+              <div id="taskNotesEditor">
+                <p id="entryNotes"></p>
+              </div>                    
+            </div>
+          </div>
+
+          <div class="entryList" id="calendarPanel" style="display:none">
+            <div id="calendar">
+              <h2>Notable Dates</h2>
+              <button id="accCalDate" class="accordion">Date List</button>
+              <div id="eventContainer">
+                <table id="eventTable" class="">
+                  <!-- Your table headers here -->
+                  <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Years</th>
+                        <!-- Add more headers as needed -->
+                      </tr>
+                  </thead>
+                  <!-- Your table body here -->
+                  <tbody id="eventTableBody">
+                      <!-- Table rows will be dynamically populated here -->
+                  </tbody>
+                </table>
+              </div>  <!-- end of eventContainer div  -->
+              <div id="newDateContainer" class="bottomPanel">
+                <button id="accNewEvent" class="accordion">Add New Event</button>
+                <div id="newEventArea" class="accPanel">
+                  <table> 
+                    <tr>
+                      <td>
+                        <label for="eventType">Event Type:</label>
+                        <select id="eventType">
+                          <option value="Birthday">Birthday</option>
+                          <option value="Anniversary">Anniversary</option>
+                          <option value="Death">Death</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </td>
+                      <td>
+                        <label for="eventName" >Name:</label>
+                        <input type="text" id="eventName">
+                      </td>
+                      <td>
+                        <label for="eventDate" >Date:</label>
+                        <input type="date" id="eventDate">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3"><Center><button class="btn1" id="btnAddEvent" onclick="addEvent()">Add Event</button></Center></td>
+                    </tr>
+                  </table>  
+                </div>  <!-- end of newDateArea div  -->
+              </div> <!-- end of newDateContainer div  -->
+            </div>  <!-- end of calender div  -->
+          </div>  <!-- end of calenderPanel div  -->
+          
+          <div class="entryList" id="bookmarkPanel" style="display:none">
+            <div id="bookmark">
+              <h2>Bookmarks</h2>
+            </div>
+            <div class="bmContainer">
+              <div class="row">
+                <div class="col left-aligned">
+                  <button id="accLeftBookmark" class="accordion">General</button>
+                  <div id="bmLeftCol" class="accPanel">
+                    <!-- Content for first column (left-aligned) -->
+                  </div>
+                </div>
+                <div class="col right-aligned">
+                  <button id="accRightBookmark" class="accordion">Work</button>
+                  <div id="bmRightCol" class="accPanel">
+                    <!-- Content for second column (right-aligned) -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="newBookmarkContainer" class="bottomPanel">
+              <button id="accNewBookmark" class="accordion">Bookmark Maint...</button>
+              <div id="newLinkArea" class="accPanel">
+                <table> 
+                  <tr>
+                    <td>
+                      <label for="bmTitle" >Title:</label>
+                      <input type="text" id="bmTitle" >
+                    </td>
+                    <td>
+                        <label for="bmCategory">SubType:</label>
+                      <select id="bmCategory">
+                        <optgroup label="General">
+                          <option value="General.News">News</option>
+                          <option value="General.Sports">Sports</option>
+                          <option value="General.Finance">Finance</option>
+                          <option value="General.Weather">Weather</option>
+                          <option value="General.Entertainment">Entertainment</option>
+                          <option value="General.Shopping">Shopping</option>
+                          <option value="General.Social">Social</option>
+                          <option value="General.Health">Health</option>
+                          <option value="General.Utilities">Utilities</option>
+                        </optgroup>
+                        <optgroup label="Work">
+                          <option value="Work.General">General</option>
+                          <option value="Work.MTRS">MTRS</option>
+                          <option value="Work.Fresh">Fresh</option>
+                          <option value="Work.Fusion">Fusion/Impact</option>
+                          <option value="Work.Folders">Folders</option>
+                        </optgroup>
+                      </select>  
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <label for="bmUrl" >URL:</label>
+                      <input type="text" id="bmUrl">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="bmIdHidden" style="display:block">
+                      <div>
+                        <input type="text" id="bmID" style="display:inline-block; width:60%;">
+                        <input type="text" id="bmRev" style="display:none;">
+                        <button class="btn1" id="btnGetLink" style="display: inline-block; width: 40%;" onclick="getBookmark()">Get ID</button>
+                      </div>
+                    </td>
+                    <td> 
+                      <center>
+                        <button class="btn1" id="btnAddLink" onclick="addBookmark()">Add Link</button>
+                        <button class="btn1" id="btnUpdateLink" onclick="updateBookmark()">Update Link</button>
+                        <button class="btn1" id="btnDeleteLink" onclick="deleteBookmark()">Delete Link</button>
+                      </center>
+                    </td>
+                  </tr>
+                </table>  
+              </div>  <!-- end of newLinkArea div -->
+            </div>  <!-- end of newBookmarkContainer div -->
+          </div>
+
+          <div class="entryList" id="backupPanel" style="display:none">
+            <div id="exportImport">
+              <h2>Backup / Restore</h2>
+              <table id="tblBackup"> 
+                <tr>
+                  <td rowspan="2">
+                      <br>
+                      <button type="button" id="backup" onclick="backupDB();" class="btn1">Backup</button>
+                  </td>
+                  <td >
+                    <center><input type="file" id="backupFile" accept=".json"></center>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button type="button" id="restore" onclick="restoreDB();" class="btn1">Restore</button>
+                  </td>
+                </tr>
+                </table>  
+            </div>
+          </div>
+
+          <div class="bottomIconBar" id="bottomIconBar">
+            <!-- <a href="#prev"><i class="fa fa-backward fa-2x"></i></a>
+            <a href="#next"><i class="fa fa-forward fa-2x"></i></a> -->
+            <a href="#save"><i class="fa fa-floppy-o fa-2x" id="saveIcon"></i></a>
+            <a href="#pdf"><i class="fa fa-file-pdf-o fa-2x" id="pdfIcon"></i></a>
+            <a href="#edit"><i class="fa fa-pencil-square-o fa-2x" id="editIcon" ></i></a>
+            <a href="#del"><i class="fa fa-trash fa-2x" id="delIcon" style="display:none"></i></a>            
+            <a href="#remind"><i class="fa fa-bell fa-2x" id="remindIcon" style="display:none"></i></a>
+            <a href="#prev"><i class="fa fa-calendar-minus-o fa-2x" id="prevIcon"></i></a>
+            <a href="#today"><i class="fa fa-calendar-o fa-2x" id="todayIcon"></i></a>
+            <a href="#next"><i class="fa fa-calendar-plus-o fa-2x" id="nextIcon"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+   </body>
+  
+  <script src="app.js"></script>
+
+</html>
+

@@ -1,0 +1,948 @@
+:root {
+	--dark: #374151;
+	--darker: #1f2937;
+	--darkest: #111827;
+	--grey: #6b7280;
+	--pink: #ec4899;
+	--purple: #8b5cf6;
+	--light: #eee;
+}
+
+* {
+	margin: 0;
+	box-sizing: border-box;
+	font-family: "Fira sans", sans-serif;
+}
+ 
+#version {
+	position: absolute;
+	bottom: .75vh;
+	left: .75vw;
+	color: white;
+	z-index: 99;
+}
+
+/* Primary Container - everything belongs */
+.container {
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+}
+
+/* Vertical Icon Bar */
+.sideIconBar {
+	width: 4vw; /* Set a specific width */
+	background-color: var(--dark); /* Dark-grey background */
+	z-index: 1;
+	max-height: 100vh;
+}
+
+.sideIconBar a {
+	display: block; /* Make the links appear below each other instead of side-by-side */
+	text-align: center; /* Center-align text */
+	padding: 1.2vh; /* Add some padding */
+	transition: all 0.3s ease; /* Add transition for hover effects */
+	color: white; /* White text color */
+	/*font-size: 4vh; /* Increased font-size */
+}
+
+.sideIconBar a:hover {
+	background-color: #555; /* Add a hover color */
+}
+
+.sideIconBar .active {
+	background-color: #04aa6d; /* Add an active/current color */
+}
+
+/* Horizontal Icon Bar */
+.bottomIconBar {
+	position: fixed;
+	display: flex;
+    justify-content: space-evenly;
+	align-items: center;
+	bottom: 1vw;
+	width: 43vw;
+	height: 6vh;
+	background-color: transparent; /* Dark-grey background */
+	overflow: auto; /* Overflow due to float */
+}
+
+.bottomIconBar a {
+	float: left; /* Float links side by side */
+	text-align: center; /* Center-align text */
+	width: 12%; /* Equal width (5 icons with 20% width each = 100%) */
+	padding: 10px 0px; /* Some top and bottom padding */
+	transition: all 0.3s ease; /* Add transition for hover effects */
+	color: #555555; /* White text color */
+	font-size: large;  
+}
+
+.bottomIconBar a:hover {
+	color: white;
+	background-color:var(--dark) /* Add a hover color */
+}
+
+/* Date & Time Reference at bottom of page */
+.dateContainer {
+	position: fixed;
+	height: 5%;
+	overflow: auto; /* Overflow due to float */
+	bottom: 2.5%;
+	left: 4vw;
+	width: 45vw;
+	background-color: transparent; /* Adjust as needed */
+	display: flex;
+	color: var(--darker);
+	font-size: x-large;
+	font-weight: bold;
+	padding: 10px; /* Adjust padding as needed */
+}
+
+/* Used within DateContainer */
+.column {
+	flex: 1; /* Each column takes up equal space */
+	padding: 10px;
+	border: none;
+	text-align: center;
+}
+
+.bottomPanel{
+	bottom: 10vh;
+    position: fixed;
+    width: 42.5%;
+}
+
+/* Notebook Image as Backdrop */
+#notebook {
+	position: fixed;
+	left: 4vw;
+	width: 96vw;
+	height: 100vh;
+}
+
+/* This panel contains all other sub-panels */
+.panelContainer {
+	margin-left: 0.5vw;
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	background-color: transparent;
+}
+
+/* Parent to left and right panel */
+.panel {
+	flex: 1;
+	background-color: transparent;
+	padding-left: 10px;
+	padding-right: 10px;
+	max-height: 95vh;
+}
+
+#leftPanel {
+	position: relative; /* Set position to relative */
+	margin-left: 1%;
+	margin-top: 2%;
+}
+#rightPanel {
+	position: relative; /* Set position to relative */
+	margin-left: 5%;
+	margin-top: 2%;
+	margin-right: 1.5%;
+}
+
+#tab1,
+#tab2 {
+	width: 38vw;
+}
+
+#entryPanel{
+	overflow: hidden;
+}
+
+#entryPanel2 {
+	flex: 1;
+	flex-direction: column;
+	max-height: 90vh; /* Adjust the height as needed */
+	overflow: hidden;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	max-height: 100%;
+	color: var(--light);
+	background-color: transparent;
+}
+
+header {
+	padding: 2rem 1rem;
+	max-width: 800px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+header h1 {
+	font-size: 2.5rem;
+	font-weight: 300;
+	color: var(--grey);
+	margin-bottom: 1rem;
+}
+
+label,
+input[type="visible"],
+input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle; /* Align elements vertically in the middle */
+	margin-right: 20px; /* Add some space between checkbox and entry */
+	padding: 2px;
+}
+
+h1,
+h2,
+h3 {
+	color: var(--dark);
+	padding: 5px 15px;
+}
+
+button {
+	color: black;
+	border: none;
+}
+
+.selected {
+	text-decoration: underline;
+	-webkit-text-fill-color: black !important;
+}
+
+.btn1 {
+	color: var(--pink);
+	font-size: 1.25rem;
+	font-weight: 700;
+	-webkit-text-fill-color: transparent;
+	background-image: linear-gradient(to right, var(--pink), var(--purple));
+	-webkit-background-clip: text;
+	background-color: transparent;
+	cursor: pointer;
+	transition: 0.4s;
+	padding: 10px;
+	border: none;
+}
+
+
+
+.btn2 {
+	color: var(--purple);
+	font-size: 1.25rem;
+	font-weight: 700;
+	background-color: transparent;
+	border: none;
+	border-radius: 10px;
+	display: inline-flex;
+	margin-left: 0px;
+	padding: 2.5px 10px;
+	box-shadow: 0px 0px 2px 2px var(--purple);
+	vertical-align: right;
+}
+
+/* .btn3 {
+	color: var(--purple);
+	font-size: 1rem;
+	font-weight: 500;
+	background-color: transparent;
+	border: none;
+	border-radius: 10px;
+	display: inline-flex;
+	margin-top: 0px !important;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 0.5px 10px;
+	box-shadow: 0px 0px 2px 2px var(--purple);
+	vertical-align: middle;
+} */
+
+.btn:hover {
+	opacity: 0.8;
+}
+
+.btn:active {
+	opacity: 0.6;
+}
+
+#listContainer {
+	min-height: 85vh; /* Adjust the height as needed */
+	max-height: 85vh; /* Adjust the height as needed */
+	overflow-y: auto; /* Enable vertical scrollbar when content exceeds area height */
+}
+
+#journalArea {
+	min-height: 70vh; /* Adjust the height as needed */
+	max-height: 70vh; /* Adjust the height as needed */
+	overflow-y: auto; /* Enable vertical scrollbar when content exceeds area height */
+	resize: none !important;
+}
+
+#subTaskList {
+	height: auto;
+	overflow-y: auto; /* Enable vertical scrollbar when content exceeds area height */
+}
+
+#entryNotes {
+	flex-grow: 1; /* Allow entryNotes to grow and use extra space */
+	height: auto;
+	overflow-y: auto; /* Enable vertical scrollbar when content exceeds textarea height */
+}
+
+#entryId {
+	border: none;
+	width: 5vw;
+	text-align: center;
+	padding-right: 5%;
+	margin-right: 2%;
+}
+
+#noteBookID {
+	display:inline-flex;
+	border: none;
+	text-align: center;
+	background: transparent;
+	font-size: larger;
+}
+
+#journalID {
+display:inline-flex;
+border: none;
+text-align: center;
+background: transparent;
+font-size: larger;
+}
+
+.column {
+	float: left;
+	width: 33.33%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.entryHeader {
+	background-color: #ccc;
+}
+
+.entryList {
+	list-style: none; /* Remove default list styles */
+	padding: 0px; /* Remove default padding */
+	border: 1px solid #ccc; /* Add border around the list */
+	color: black;
+}
+
+.entryItem {
+	display: flex; /* Use flexbox for layout */
+	align-items: center; /* Center items vertically */
+	justify-content: space-between; /* Push the delete button to the right edge */
+	font-size: larger;
+	margin-top: 3.5px; /* Add bottom margin to create space between list entries */
+	margin-bottom: 3.5px; /* Add bottom margin to create space between list entries */
+	padding: 3px;
+}
+
+/* Adjust the width of the entry */
+.entryItem span {
+	flex: 3; /* Set the entry to take 3/4 (75%) of the available space */
+}
+
+/* Adjust checkbox and delete button styles */
+.entryItem input[type="checkbox"] {
+	margin-right: 20px; /* Add some space between checkbox and entry */
+	transform: scale(1.75); /* Adjust the scale factor as needed */
+}
+
+.entryItem .delete-button {
+	margin-left: auto; /* Push delete button to the right */
+}
+
+#drpNotebookTopic {
+	padding: 5px;
+    border-radius: 15px;
+    width: 30vw;
+	max-width: 30vw;
+    height: fit-content;
+    margin: 1%;
+	color: black;
+	background-color: lightyellow;
+}
+
+#drpNotebookTopic option {
+	max-width: inherit; /* Set the width of the option elements to inherit from the select box */
+  }
+
+#tasks .entry {
+	display: flex;
+	justify-content: space-between;
+	background-color: transparent;
+	padding: 1rem;
+	border-radius: 1rem;
+	margin-bottom: 1rem;
+}
+
+.entry .content {
+	flex: 1 1 0%;
+}
+
+.entry .content .text {
+	color: var(--light);
+	font-size: 1.125rem;
+	width: 100%;
+	display: block;
+	transition: 0.4s;
+}
+
+.entry .content .text:not(:read-only) {
+	color: var(--pink);
+}
+
+.entry .actions button:hover {
+	opacity: 0.8;
+}
+
+.entry .actions button:active {
+	opacity: 0.6;
+}
+
+.entry .actions .edit {
+	background-image: linear-gradient(to right, var(--pink), var(--purple));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.entry .actions .delete {
+	color: crimson;
+}
+
+body {
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+	font-family: "Lato", sans-serif;
+	overflow: hidden;
+}
+
+textarea {
+	padding: 12px 20px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	background-color: transparent;
+	font-size: larger;
+	resize: none;
+}
+
+label {
+	display: block;
+	color: black;
+	font-size: large;
+	font-weight: bold;
+	margin-left: 10px; /* Reset the left margin */
+}
+
+input {
+	display: block;
+	margin-left: 10px;
+}
+
+input[type="text"] {
+	font-size: large;
+	margin-left: 10px;
+}
+
+input[type="date"] {
+	font-size: large;
+	margin-left: 10px; /* Reset the left margin */
+}
+
+input[type="checkbox"] {
+	appearance: checkbox !important;
+	text-align: left;
+	transform: scale(1.5); /* Adjust the scale factor as needed */
+	margin-left: 10px; /* Reset the left margin */
+}
+
+select {
+	margin-left: 10px; /* Reset the left margin */
+}
+
+.form-buttons {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.form-buttons button {
+	margin: 0px 0px;
+}
+
+select {
+	width: 50%;
+	height: auto;
+	font-size: larger;
+}
+
+/* Split the screen in half */
+.split area-1 {
+	height: 100%;
+	width: 50%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	overflow-x: hidden;
+	padding-top: 20px;
+}
+
+/* Control the right side */
+.right {
+	right: 0;
+	background-color: transparent;
+}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+
+/* Style the image inside the centered container, if needed */
+.centered img {
+	width: 150px;
+	border-radius: 50%;
+}
+
+.row {
+	display: flex;
+	align-items: center; /* Align items vertically */
+}
+
+
+
+.column {
+	flex: 1; /* Equal width columns */
+	margin-right: 10px;
+}
+
+textarea {
+	flex: 1; /* Textarea takes remaining space */
+}
+
+.btnTitle {
+	margin-left: 80%; /* Adjust as needed */
+	width: 5%;
+	margin: 0;
+	font-size: large;
+	padding: 0px 0px;
+	width: 5%;
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Center items horizontally */
+	margin-left: 10px; /* Adjust margin as needed */
+}
+
+.entryList {
+	background-color: white;
+	margin: 1%;
+	width: 43vw;
+	height: 88.5vh;
+}
+
+.entryList table {
+	width: 100%;
+	border: none !important;
+	border-collapse: collapse !important;
+}
+
+.entryList td {
+	padding: 10px;
+	width: 33%;
+	/* border: 1px solid #dddddd; */
+}
+
+/* .entryList td:nth-child(1),
+.entryList td:nth-child(2),
+.entryList td:nth-child(3) {
+	width: 33%;
+} */
+
+.entryList td label {
+	width: 95%;
+	/* margin-right: 10px; Adjust the spacing as needed */
+}
+
+.entryList input[type="text"],
+.entryList input[type="date"],
+.entryList select {
+	width: 95%;
+}
+
+#artifactPath,
+#entryProject {
+	width: 97%;
+}
+
+.entryList textarea {
+	width: 100%;
+	resize: vertical;
+}
+
+.entryList button {
+	margin-top: 10px;
+}
+
+#accNewBookmark {
+ margin: 0 10px;	/* 0 for top and bottom margins, 10px for left and right margins */
+ width: 98% !important;
+ padding: 10px;
+ text-align: center;
+}
+
+
+.split-div {
+	display: flex;
+	justify-content: space-between;
+	align-items: center; /* Vertically center align */
+}
+
+.split-div .btn1,
+.split-div h3 {
+	margin-top: 5px;
+	padding: 10px;
+}
+
+#prepend {
+	display: inline-flex;
+	width: 25vw;
+}
+
+#prepend label {
+	width: fit-content;
+}
+
+.left-aligned {
+	text-align: left;
+	min-width: 70%;
+}
+
+.right-aligned {
+	text-align: right;
+	min-width: 30%;
+}
+
+.newEntryForm {
+	display: flex;
+	width: 98%;
+	margin-left: 10px;
+}
+
+
+
+.newEntry::placeholder {
+	color: black;
+}
+
+#entryName{
+	padding: 20px; /* Adjust padding to make space for the checkbox */
+	border-radius: 15px;
+	width: 96%;
+	height: 2.5vh;
+	margin: 2%;
+	/* Other styling properties */
+}
+
+.inputContainer {
+	position: relative;
+	display: inline; /* Ensures the container size fits its content */
+}
+
+.inputContainer.newEntry {
+	padding-right: 10px; /* Adjust padding to make space for the checkbox */
+	border-radius: 10px;
+	width: 98%;
+	height: 45px;
+	background-color: lightyellow;
+	margin: 0 20px;
+	/* Other styling properties */
+}
+
+.inputContainer.checkboxOverlay {
+	position: absolute;
+	top: 12%; /* Vertically center the checkbox */
+	left: 39vw; /* Position the checkbox at the end of the input field */
+	transform: translateY(-50%) scale(1.5); /* Adjust to vertically center the checkbox */
+	width: 15px; /* Set the width of the checkbox */
+	height: 15px; /* Set the height of the checkbox */
+	
+		/* Other styling properties */
+}
+
+#entrySubTask {
+	padding: 10px; 
+	border-radius: 10px;
+	width: 96% !important; 
+	height: 45px;
+	background-color: lightyellow;
+	margin: 0 20px;
+	/* Other styling properties */
+}
+
+#journalPanel {
+	height:92%;
+}
+
+#journalEntry {
+	margin-left: 0px;
+}
+
+#journalEditor {
+	height:73vh;
+	overflow: hidden;
+}
+
+#notebookEditor {
+	height:73vh;
+	overflow: hidden;
+}
+
+#eventTable td {
+	width: 25%;
+	text-align: center;
+}
+
+#eventTable {
+	font-size: larger;
+}
+
+
+/* Style for the table container */
+#tableContainer {
+	margin-top: 20px;
+}
+
+/* Style for the table */
+#entryTable {
+	width: 100%;
+	border-collapse: collapse;
+	color: black;
+	font-size: larger;
+}
+
+/* Style for table header */
+#entryTable th {
+	background-color: #f2f2f2;
+	border: 1px solid #dddddd;
+	padding: 8px;
+	text-align: left;
+}
+
+/* Style for table rows */
+#entryTable tr {
+	border: 1px solid #dddddd;
+}
+
+/* CSS styles for hiding and showing table rows and columbs */
+.hidden {
+	display: none;
+}
+
+.rowSelect {
+	color: red;
+	background-color: lightyellow;
+}
+
+/* Style for alternating row background color */
+/* #entryTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+} */
+
+/* Style for table cells */
+#entryTable td {
+	border: 1px solid #dddddd;
+	padding: 8px;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+	background-color: var(--dark);
+	color: white;
+	cursor: pointer;
+	padding: 12px;
+	width: 98%;
+	margin:1%;
+	text-align: left;
+	border: none;
+	outline: none;
+	transition: background-color 0.4s, color 0.4s; /* Smooth transition for background and text color */
+	border-radius: 15px;
+	font-size: large;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion .active {
+	background-color: grey;
+	color: white;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.accPanel {
+	display: none;
+	padding: 0 0px;
+	background-color: white;
+	/* height: 22vh; */
+	overflow-y: auto;
+	width: 98%;
+	margin: 0 5px;
+	/* border: 3px solid var(--darker);
+	border-radius: 15px; */
+}
+
+.listHeader{
+	background-color: lightgray;
+}
+
+.bmLink {
+	font-size: larger;
+}
+
+.accordion:after {
+	content: "\02795"; /* Unicode character for "plus" sign (+) */
+	font-size: large;
+	color: #777;
+	float: right;
+	margin-left: 5px;
+}
+
+.accordion.active:after {
+	content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+
+.ql-toolbar.ql-snow .ql-header.ql-picker > * {
+  display: flex;
+  align-items: center;
+  height: 2.5vh;
+} 	
+
+.ql-editor {
+  padding: 4px;
+  font-size: 1.5vh;
+  margin: 2px; 
+}
+
+span.ql-formats > * {
+	margin-right: 15px; 
+	display: flex;
+	align-items: center;
+	height: 1.5vh;
+	
+  }
+
+
+/* Increase the size of the icons */
+.ql-snow.ql-toolbar button, 
+.ql-snow .ql-toolbar button {
+    width: 40px;
+	height: 40px !important;
+}
+
+span.ql-picker-label  > * {
+	width: 40px;
+	height: 40px !important;
+	
+}
+
+span.ql-size.ql-picker {
+	padding-top:5px;
+    width: 40px;
+	font-size: 1.5vh;
+	height: 40px !important;	
+}
+.ql-snow .ql-color-picker.ql-color .ql-picker-item {
+	height: 2vh;
+	width: 2vw;
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+	padding-top:15px;
+	height: 2vh;
+	width: 12vw;
+}
+
+/* Custom CSS for accordion layout */
+
+/* Adjust accordion item margins */
+.accordion-item {
+    margin-bottom: 10px;
+}
+
+/* Styling for accordion headers */
+.card-header {
+    background-color: #f8f9fa;
+}
+
+/* Styling for collapsed accordion headers */
+.card-header.collapsed {
+    background-color: #e9ecef;
+}
+
+/* Styling for accordion content */
+.card-body {
+    background-color: #fff;
+    border-top: 1px solid #dee2e6;
+}
+
+.bmContainer .left-aligned, .bmContainer .right-aligned {
+	text-align: center;
+	min-width: 50%;
+	padding: 10px;
+}
+
+.bmContainer .row {
+	display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: center;
+}
+
+#taskNotesEditor {
+	height: 20vh;
+	overflow: none;
+}	
+
+.ReminderRow {
+	background-color: skyblue;
+}
+
+#txtSpecial {
+	text-align: center;
+	font-size: 1.5vh;
+	font-weight: bold;
+	color: red;
+}
+
+#tblBackup td{
+	background-color: white;
+	border-radius: 10px;
+	border: 1px solid darkblue;
+	padding: 8px;
+	text-align: center;
+	font-size: larger;
+	
+}
+
+#backupFile {
+	font-size: larger;
+	
+}
+
+

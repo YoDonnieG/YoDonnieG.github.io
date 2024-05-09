@@ -15,7 +15,7 @@ function initDB() {
 	 db = new PouchDB("planner");
 
     // Remote CouchDB URL
-    var remoteCouch = "https://admin:admin@192.168.1.40:5986/planner";
+    var remoteCouch = "https://admin:admin@192.168.1.40:5984/planner";
 
     // Replicate data with remote CouchDB
     var replication = PouchDB.sync("planner", remoteCouch, {
